@@ -7,5 +7,7 @@ namespace mvcProyect.Models
     public int IdProducto { get; set; }
     public int Cantidad { get; set; }
     public decimal PrecioUnitario { get; set; }
+    public PedidoModel Pedido { get; set; }
+    public ProductoModel Producto { get; set; }
     }
 }

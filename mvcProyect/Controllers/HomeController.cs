@@ -15,6 +15,9 @@ namespace mvcProyect.Controllers
 
         public IActionResult Index()
         {
+            HomeModel Mode = new HomeModel();
+            Mode.Mensaje = "Hola Mundito!";
+            //Mode.Destinatario = "Docentes";
             return View();
         }
 
