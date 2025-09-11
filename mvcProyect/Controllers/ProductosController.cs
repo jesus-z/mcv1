@@ -5,27 +5,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using mvcProyect.Models;
 using mvcProyect.Data;
+using mvcProyect.Models;
 
-namespace WAMVC.Controllers
+namespace mvcProyect.Controllers
 {
-    public class ProductoController : Controller
+    public class ProductosController : Controller
     {
         private readonly ArtesaniasDBContext _context;
 
-        public ProductoController(ArtesaniasDBContext context)
+        public ProductosController(ArtesaniasDBContext context)
         {
             _context = context;
         }
 
-        // GET: Producto
+        // GET: ProductoModels
         public async Task<IActionResult> Index()
         {
             return View(await _context.Productos.ToListAsync());
         }
 
-        // GET: Producto/Details/5
+        // GET: ProductoModels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,13 +43,13 @@ namespace WAMVC.Controllers
             return View(productoModel);
         }
 
-        // GET: Producto/Create
+        // GET: ProductoModels/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Producto/Create
+        // POST: ProductoModels/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -65,7 +65,7 @@ namespace WAMVC.Controllers
             return View(productoModel);
         }
 
-        // GET: Producto/Edit/5
+        // GET: ProductoModels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,7 +81,7 @@ namespace WAMVC.Controllers
             return View(productoModel);
         }
 
-        // POST: Producto/Edit/5
+        // POST: ProductoModels/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -116,7 +116,7 @@ namespace WAMVC.Controllers
             return View(productoModel);
         }
 
-        // GET: Producto/Delete/5
+        // GET: ProductoModels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,7 +134,7 @@ namespace WAMVC.Controllers
             return View(productoModel);
         }
 
-        // POST: Producto/Delete/5
+        // POST: ProductoModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

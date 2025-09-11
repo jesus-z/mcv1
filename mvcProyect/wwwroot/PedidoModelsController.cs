@@ -8,24 +8,25 @@ using Microsoft.EntityFrameworkCore;
 using mvcProyect.Data;
 using mvcProyect.Models;
 
-namespace mvcProyect.Controllers
+namespace mvcProyect.wwwroot
 {
-    public class HomeController : Controller
+    public class PedidoModelsController : Controller
     {
         private readonly ArtesaniasDBContext _context;
 
-        public HomeController(ArtesaniasDBContext context)
+        public PedidoModelsController(ArtesaniasDBContext context)
         {
             _context = context;
         }
 
-        // GET: HomeModels
+        // GET: PedidoModels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.HomeModels.ToListAsync());
+            var artesaniasDBContext = _context.Pedidos.Include(p => p.Cliente);
+            return View(await artesaniasDBContext.ToListAsync());
         }
 
-        // GET: HomeModels/Details/5
+        // GET: PedidoModels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,42 @@ namespace mvcProyect.Controllers
                 return NotFound();
             }
 
-            var homeModel = await _context.HomeModels
+            var pedidoModel = await _context.Pedidos
+                .Include(p => p.Cliente)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (homeModel == null)
+            if (pedidoModel == null)
             {
                 return NotFound();
             }
 
-            return View(homeModel);
+            return View(pedidoModel);
         }
 
-        // GET: HomeModels/Create
+        // GET: PedidoModels/Create
         public IActionResult Create()
         {
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "NombreCompleto");
             return View();
         }
 
-        // POST: HomeModels/Create
+        // POST: PedidoModels/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RequestId,Mensaje")] HomeModel homeModel)
+        public async Task<IActionResult> Create([Bind("Id,FechaPedido,ClienteId,Estado,MontoDecimal")] PedidoModel pedidoModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(homeModel);
+                _context.Add(pedidoModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(homeModel);
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "NombreCompleto", pedidoModel.ClienteId);
+            return View(pedidoModel);
         }
 
-        // GET: HomeModels/Edit/5
+        // GET: PedidoModels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +77,23 @@ namespace mvcProyect.Controllers
                 return NotFound();
             }
 
-            var homeModel = await _context.HomeModels.FindAsync(id);
-            if (homeModel == null)
+            var pedidoModel = await _context.Pedidos.FindAsync(id);
+            if (pedidoModel == null)
             {
                 return NotFound();
             }
-            return View(homeModel);
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "NombreCompleto", pedidoModel.ClienteId);
+            return View(pedidoModel);
         }
 
-        // POST: HomeModels/Edit/5
+        // POST: PedidoModels/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RequestId,Mensaje")] HomeModel homeModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FechaPedido,ClienteId,Estado,MontoDecimal")] PedidoModel pedidoModel)
         {
-            if (id != homeModel.Id)
+            if (id != pedidoModel.Id)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace mvcProyect.Controllers
             {
                 try
                 {
-                    _context.Update(homeModel);
+                    _context.Update(pedidoModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HomeModelExists(homeModel.Id))
+                    if (!PedidoModelExists(pedidoModel.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +118,11 @@ namespace mvcProyect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(homeModel);
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "NombreCompleto", pedidoModel.ClienteId);
+            return View(pedidoModel);
         }
 
-        // GET: HomeModels/Delete/5
+        // GET: PedidoModels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +130,35 @@ namespace mvcProyect.Controllers
                 return NotFound();
             }
 
-            var homeModel = await _context.HomeModels
+            var pedidoModel = await _context.Pedidos
+                .Include(p => p.Cliente)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (homeModel == null)
+            if (pedidoModel == null)
             {
                 return NotFound();
             }
 
-            return View(homeModel);
+            return View(pedidoModel);
         }
 
-        // POST: HomeModels/Delete/5
+        // POST: PedidoModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var homeModel = await _context.HomeModels.FindAsync(id);
-            if (homeModel != null)
+            var pedidoModel = await _context.Pedidos.FindAsync(id);
+            if (pedidoModel != null)
             {
-                _context.HomeModels.Remove(homeModel);
+                _context.Pedidos.Remove(pedidoModel);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HomeModelExists(int id)
+        private bool PedidoModelExists(int id)
         {
-            return _context.HomeModels.Any(e => e.Id == id);
+            return _context.Pedidos.Any(e => e.Id == id);
         }
     }
 }

@@ -10,22 +10,22 @@ using mvcProyect.Models;
 
 namespace mvcProyect.Controllers
 {
-    public class HomeController : Controller
+    public class ClientesController : Controller
     {
         private readonly ArtesaniasDBContext _context;
 
-        public HomeController(ArtesaniasDBContext context)
+        public ClientesController(ArtesaniasDBContext context)
         {
             _context = context;
         }
 
-        // GET: HomeModels
+        // GET: ClienteModels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.HomeModels.ToListAsync());
+            return View(await _context.Clientes.ToListAsync());
         }
 
-        // GET: HomeModels/Details/5
+        // GET: ClienteModels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace mvcProyect.Controllers
                 return NotFound();
             }
 
-            var homeModel = await _context.HomeModels
+            var clienteModel = await _context.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (homeModel == null)
+            if (clienteModel == null)
             {
                 return NotFound();
             }
 
-            return View(homeModel);
+            return View(clienteModel);
         }
 
-        // GET: HomeModels/Create
+        // GET: ClienteModels/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: HomeModels/Create
+        // POST: ClienteModels/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RequestId,Mensaje")] HomeModel homeModel)
+        public async Task<IActionResult> Create([Bind("Id,NombreCompleto,Telefono,FechaRegistro,Ciudad,Activo")] ClienteModel clienteModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(homeModel);
+                _context.Add(clienteModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(homeModel);
+            return View(clienteModel);
         }
 
-        // GET: HomeModels/Edit/5
+        // GET: ClienteModels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace mvcProyect.Controllers
                 return NotFound();
             }
 
-            var homeModel = await _context.HomeModels.FindAsync(id);
-            if (homeModel == null)
+            var clienteModel = await _context.Clientes.FindAsync(id);
+            if (clienteModel == null)
             {
                 return NotFound();
             }
-            return View(homeModel);
+            return View(clienteModel);
         }
 
-        // POST: HomeModels/Edit/5
+        // POST: ClienteModels/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RequestId,Mensaje")] HomeModel homeModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NombreCompleto,Telefono,FechaRegistro,Ciudad,Activo")] ClienteModel clienteModel)
         {
-            if (id != homeModel.Id)
+            if (id != clienteModel.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace mvcProyect.Controllers
             {
                 try
                 {
-                    _context.Update(homeModel);
+                    _context.Update(clienteModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HomeModelExists(homeModel.Id))
+                    if (!ClienteModelExists(clienteModel.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace mvcProyect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(homeModel);
+            return View(clienteModel);
         }
 
-        // GET: HomeModels/Delete/5
+        // GET: ClienteModels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +124,34 @@ namespace mvcProyect.Controllers
                 return NotFound();
             }
 
-            var homeModel = await _context.HomeModels
+            var clienteModel = await _context.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (homeModel == null)
+            if (clienteModel == null)
             {
                 return NotFound();
             }
 
-            return View(homeModel);
+            return View(clienteModel);
         }
 
-        // POST: HomeModels/Delete/5
+        // POST: ClienteModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var homeModel = await _context.HomeModels.FindAsync(id);
-            if (homeModel != null)
+            var clienteModel = await _context.Clientes.FindAsync(id);
+            if (clienteModel != null)
             {
-                _context.HomeModels.Remove(homeModel);
+                _context.Clientes.Remove(clienteModel);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HomeModelExists(int id)
+        private bool ClienteModelExists(int id)
         {
-            return _context.HomeModels.Any(e => e.Id == id);
+            return _context.Clientes.Any(e => e.Id == id);
         }
     }
 }
