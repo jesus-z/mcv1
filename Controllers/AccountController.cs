@@ -70,7 +70,7 @@ namespace mvcProyect.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
-
+        //s
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
