@@ -18,7 +18,6 @@ namespace mvcProyect.Controllers
         {
             _context = context;
         }
-
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
@@ -74,7 +73,6 @@ namespace mvcProyect.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Logout()
@@ -82,11 +80,54 @@ namespace mvcProyect.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
         }
-
         [AllowAnonymous]
         public IActionResult AccessDenied()
         {
             return View();
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Register(string Username, string Email, string Password, string ConfirmPassword)
+        {
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+            {
+                ModelState.AddModelError("", "Todos los campos son obligatorios.");
+                return View();
+            }
+
+            if (Password != ConfirmPassword)
+            {
+                ModelState.AddModelError("", "Las contraseñas no coinciden.");
+                return View();
+            }
+
+            var existingUser = _context.Usuarios.FirstOrDefault(u => u.Email == Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("", "Ya existe un usuario con ese correo electrónico.");
+                return View();
+            }
+
+           
+            var nuevoUsuario = new Usuario
+            {
+                NombreCompleto = Username,
+                Email = Email,
+                Contraseña = Password, 
+                Rol = "Usuario",
+                Activo = true
+            };
+
+            _context.Usuarios.Add(nuevoUsuario);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Tu cuenta fue creada correctamente. Ahora puedes iniciar sesión.";
+            return RedirectToAction("Login");
         }
     }
 }
